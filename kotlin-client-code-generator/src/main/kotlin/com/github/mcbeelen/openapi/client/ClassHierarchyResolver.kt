@@ -2,6 +2,7 @@ package com.github.mcbeelen.openapi.client
 
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.ComposedSchema
+import io.swagger.v3.oas.models.media.Schema
 
 class ClassHierarchyResolver {
     fun analyze(openAPI: OpenAPI): ClassHierarchy {
@@ -11,12 +12,17 @@ class ClassHierarchyResolver {
         openAPI.components.schemas.forEach { entry ->
             val schema = entry.value
 
-            if (schema is ComposedSchema) {
-                classHierarchy = processComposedSchema(classHierarchy, entry.key, schema)
+            when {
+                schema is ComposedSchema -> classHierarchy = processComposedSchema(classHierarchy, entry.key, schema)
+                schema.isEnumeration() -> classHierarchy = processEnumSchema(classHierarchy, entry.key, schema)
             }
         }
         return classHierarchy
 
+    }
+
+    private fun processEnumSchema(classHierarchy: ClassHierarchy, key: String, schema: Schema<Any>): ClassHierarchy {
+        return classHierarchy.copy(enumerations = classHierarchy.enumerations.plus(Pair(key, schema)))
     }
 
     private fun processComposedSchema(classHierarchy: ClassHierarchy, key: String, composedSchema: ComposedSchema) : ClassHierarchy {
@@ -32,3 +38,7 @@ class ClassHierarchyResolver {
     }
 
 }
+
+private fun <T> Schema<T>.isEnumeration() = this.enum != null && ! this.enum.isEmpty()
+
+

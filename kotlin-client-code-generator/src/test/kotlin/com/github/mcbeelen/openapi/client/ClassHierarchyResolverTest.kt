@@ -11,6 +11,20 @@ class ClassHierarchyResolverTest {
 
     @Test
     @Throws(IOException::class)
+    fun itShouldFindEnumerations() {
+
+        val openAPI = readJsonFrom("src/test/resources/input_example.json")
+
+        val resolver = ClassHierarchyResolver()
+        val classHierarchy = resolver.analyze(openAPI)
+
+        assertThat(classHierarchy.enumerations.keys, hasSize(equalTo(1)))
+        assertThat(classHierarchy.enumerations.keys, anyElement(equalTo("CarType")))
+    }
+
+
+    @Test
+    @Throws(IOException::class)
     fun itShouldFindProductAsParentClass() {
 
         val openAPI = readJsonFrom("src/test/resources/input_example.json")
