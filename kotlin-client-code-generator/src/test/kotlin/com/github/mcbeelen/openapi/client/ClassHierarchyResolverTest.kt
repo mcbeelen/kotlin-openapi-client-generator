@@ -3,6 +3,7 @@ package com.github.mcbeelen.openapi.client
 import com.natpryce.hamkrest.anyElement
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.hasElement
 import com.natpryce.hamkrest.hasSize
 import org.junit.Test
 import java.io.IOException
@@ -45,10 +46,10 @@ class ClassHierarchyResolverTest {
         val resolver = ClassHierarchyResolver()
         val classHierarchy = resolver.analyze(openAPI)
 
-//        val foundChildParentRelationships = classHierarchy.getChildParentRelationships()
-//        assertThat(foundChildParentRelationships.keys, hasSize(2))
-//        assertThat(foundChildParentRelationships.keys, hasElement("Car"))
-//        assertThat(foundChildParentRelationships.keys, hasElement("Laptop"))
-//        assertThat(foundChildParentRelationships.get("Car"), equalTo("Product"))
+        val foundChildParentRelationships = classHierarchy.childParentRelationships
+        assertThat(foundChildParentRelationships.keys, hasSize(equalTo(2)))
+        assertThat(foundChildParentRelationships.keys, hasElement("Car"))
+        assertThat(foundChildParentRelationships.keys, hasElement("Laptop"))
+        assertThat(foundChildParentRelationships.get("Car"), equalTo("Product"))
     }
 }

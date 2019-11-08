@@ -22,14 +22,17 @@ class ClassHierarchyResolver {
     }
 
     private fun processEnumSchema(classHierarchy: ClassHierarchy, key: String, schema: Schema<Any>): ClassHierarchy {
-        return classHierarchy.copy(enumerations = classHierarchy.enumerations.plus(Pair(key, schema)))
+        return classHierarchy.copy(enumerations = classHierarchy.enumerations.plus(key to schema))
     }
 
     private fun processComposedSchema(classHierarchy: ClassHierarchy, key: String, composedSchema: ComposedSchema) : ClassHierarchy {
         if (composedSchema.allOf.isNullOrEmpty()) {
             return classHierarchy
         } else {
-            return classHierarchy.copy(interfaceClasses = classHierarchy.interfaceClasses.plus(getParentClassName(composedSchema)))
+            val parentClassName = getParentClassName(composedSchema)
+            return classHierarchy
+                    .copy(interfaceClasses = classHierarchy.interfaceClasses.plus(parentClassName))
+                    .copy(childParentRelationships = classHierarchy.childParentRelationships.plus(key to parentClassName))
         }
     }
 
