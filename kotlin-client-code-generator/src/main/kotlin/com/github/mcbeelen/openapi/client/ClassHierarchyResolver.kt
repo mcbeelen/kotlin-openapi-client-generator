@@ -4,10 +4,12 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.ComposedSchema
 import io.swagger.v3.oas.models.media.Schema
 
-class ClassHierarchyResolver {
-    fun analyze(openAPI: OpenAPI): ClassHierarchy {
+class ClassHierarchyResolver(private val openAPI: OpenAPI) {
 
-        var classHierarchy = ClassHierarchy()
+    var classHierarchy = ClassHierarchy()
+
+    fun analyze(): ClassHierarchy {
+
 
         openAPI.components.schemas.forEach { entry ->
             val schema = entry.value

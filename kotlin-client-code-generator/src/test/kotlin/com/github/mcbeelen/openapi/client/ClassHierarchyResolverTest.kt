@@ -16,8 +16,8 @@ class ClassHierarchyResolverTest {
 
         val openAPI = readJsonFrom("src/test/resources/input_example.json")
 
-        val resolver = ClassHierarchyResolver()
-        val classHierarchy = resolver.analyze(openAPI)
+        val resolver = ClassHierarchyResolver(openAPI)
+        val classHierarchy = resolver.analyze()
 
         assertThat(classHierarchy.enumerations.keys, hasSize(equalTo(1)))
         assertThat(classHierarchy.enumerations.keys, anyElement(equalTo("CarType")))
@@ -30,8 +30,8 @@ class ClassHierarchyResolverTest {
 
         val openAPI = readJsonFrom("src/test/resources/input_example.json")
 
-        val resolver = ClassHierarchyResolver()
-        val classHierarchy = resolver.analyze(openAPI)
+        val resolver = ClassHierarchyResolver(openAPI)
+        val classHierarchy = resolver.analyze()
 
         assertThat(classHierarchy.interfaceClasses, hasSize(equalTo(1)))
         assertThat(classHierarchy.interfaceClasses, anyElement(equalTo("Product")))
@@ -43,8 +43,8 @@ class ClassHierarchyResolverTest {
 
         val openAPI = readJsonFrom("src/test/resources/input_example.json")
 
-        val resolver = ClassHierarchyResolver()
-        val classHierarchy = resolver.analyze(openAPI)
+        val resolver = ClassHierarchyResolver(openAPI)
+        val classHierarchy = resolver.analyze()
 
         val foundChildParentRelationships = classHierarchy.childParentRelationships
         assertThat(foundChildParentRelationships.keys, hasSize(equalTo(2)))
