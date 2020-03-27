@@ -12,15 +12,31 @@ class ClassHierarchyResolverTest {
 
     @Test
     @Throws(IOException::class)
-    fun itShouldFindEnumerations() {
+    fun itShouldFindTwoPackages() {
 
         val openAPI = readJsonFrom("src/test/resources/input_example.json")
 
         val resolver = ClassHierarchyResolver(openAPI)
         val classHierarchy = resolver.analyze()
 
-        assertThat(classHierarchy.enumerations.keys, hasSize(equalTo(1)))
-        assertThat(classHierarchy.enumerations.keys, anyElement(equalTo("CarType")))
+        assertThat(classHierarchy.packageMap.keys, hasSize(equalTo(2)))
+        assertThat(classHierarchy.packageMap.keys, anyElement(equalTo(PackageName("cars"))))
+        assertThat(classHierarchy.packageMap.keys, anyElement(equalTo(PackageName("dummy"))))
+    }
+
+
+    @Test
+    @Throws(IOException::class)
+    fun carTypeEnumShouldBeGeneratedInCarPackage() {
+
+        val openAPI = readJsonFrom("src/test/resources/input_example.json")
+
+        val resolver = ClassHierarchyResolver(openAPI)
+        val classHierarchy = resolver.analyze()
+
+        val carEnumerations = (classHierarchy.packageMap[PackageName("cars")] ?: error("Package 'cars' not found")).enumerations
+
+        assertThat(carEnumerations.keys, anyElement(equalTo(TypeName("CarType"))))
     }
 
 
@@ -33,8 +49,8 @@ class ClassHierarchyResolverTest {
         val resolver = ClassHierarchyResolver(openAPI)
         val classHierarchy = resolver.analyze()
 
-        assertThat(classHierarchy.interfaceClasses, hasSize(equalTo(1)))
-        assertThat(classHierarchy.interfaceClasses, anyElement(equalTo("Product")))
+        assertThat(classHierarchy.modelInterfaceClasses, hasSize(equalTo(1)))
+        assertThat(classHierarchy.modelInterfaceClasses, anyElement(equalTo(TypeName("Product"))))
     }
 
     @Test
@@ -48,8 +64,8 @@ class ClassHierarchyResolverTest {
 
         val foundChildParentRelationships = classHierarchy.childParentRelationships
         assertThat(foundChildParentRelationships.keys, hasSize(equalTo(2)))
-        assertThat(foundChildParentRelationships.keys, hasElement("Car"))
-        assertThat(foundChildParentRelationships.keys, hasElement("Laptop"))
-        assertThat(foundChildParentRelationships.get("Car"), equalTo("Product"))
+        assertThat(foundChildParentRelationships.keys, hasElement(TypeName("Car")))
+        assertThat(foundChildParentRelationships.keys, hasElement(TypeName("Laptop")))
+        assertThat(foundChildParentRelationships[TypeName("Car")], equalTo(TypeName("Product")))
     }
 }

@@ -2,13 +2,10 @@ package com.github.mcbeelen.openapi.client.kotlin.plugin
 
 import com.github.mcbeelen.openapi.client.kotlin.OpenApiClientCodeGenerator
 import org.apache.maven.plugin.AbstractMojo
-import org.apache.maven.plugins.annotations.LifecyclePhase
 import org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES
 import org.apache.maven.plugins.annotations.Mojo
 import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.project.MavenProject
-import java.nio.file.Path
-import java.nio.file.Paths
 import java.nio.file.Paths.get
 
 const val EMPTY = ""

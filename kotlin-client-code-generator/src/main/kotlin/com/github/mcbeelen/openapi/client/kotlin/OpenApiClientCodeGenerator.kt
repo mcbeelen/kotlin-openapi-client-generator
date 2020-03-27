@@ -2,6 +2,7 @@ package com.github.mcbeelen.openapi.client.kotlin
 
 import com.github.mcbeelen.openapi.client.ClassHierarchy
 import com.github.mcbeelen.openapi.client.ClassHierarchyResolver
+import com.github.mcbeelen.openapi.client.TypeName
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 import com.squareup.kotlinpoet.TypeSpec
 import io.swagger.v3.oas.integration.IntegrationObjectMapperFactory
@@ -35,8 +36,8 @@ class OpenApiClientCodeGenerator(
         enumClasses.forEach { (key, schema) -> kotlinFileWriter.writeKtFileFor(generateEnumClass(key, schema)) }
     }
 
-    private fun generateEnumClass(key: String, schema: Schema<*>): TypeSpec {
-        val enumBuilder = TypeSpec.enumBuilder(key).addModifiers(PUBLIC)
+    private fun generateEnumClass(typeName: TypeName, schema: Schema<*>): TypeSpec {
+        val enumBuilder = TypeSpec.enumBuilder(typeName.value).addModifiers(PUBLIC)
         schema.enum.forEach { enumBuilder.addEnumConstant(it.toString()) }
         return enumBuilder.build()
     }
